@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}Fake Review Detector - AI-Powered Review Analysis{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="display-4 fw-bold text-gradient mb-4">
+                        Detect Fake Reviews with AI
+                    </h1>
+                    <p class="lead mb-4">
+                        Our advanced machine learning system analyzes product reviews to identify fake and authentic content with high accuracy. Protect yourself from deceptive reviews and make informed purchasing decisions.
+                    </p>
+
+                    {% if metadata %}
+                    <div class="mb-4">
+                        <div class="row g-3">
+                            <div class="col-auto">
+                                <div class="badge bg-success fs-6">
+                                    <i class="fas fa-robot me-1"></i>
+                                    Model: {{ metadata.model_name }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="badge bg-info fs-6">
+                                    <i class="fas fa-chart-line me-1"></i>
+                                    Accuracy: {{ "%.1f"|format(metadata.accuracy * 100) }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="hero-image">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body p-4">
+                            <h3 class="card-title text-center mb-4">
+                                <i class="fas fa-search-plus text-primary me-2"></i>
+                                Try It Now
+                            </h3>
+
+                            <!-- Single Review Analysis -->
+                            <form id="reviewForm">
+                                <div class="mb-3">
+                                    <label for="reviewText" class="form-label fw-semibold">
+                                        <i class="fas fa-comment-alt me-1"></i>
+                                        Enter a product review:
+                                    </label>
+                                    <textarea 
+                                        class="form-control" 
+                                        id="reviewText" 
+                                        rows="4" 
+                                        placeholder="Type or paste a product review here..."
+                                        required
+                                    ></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-lg w-100" id="analyzeBtn">
+                                    <i class="fas fa-brain me-2"></i>
+                                    Analyze Review
+                                </button>
+                            </form>
+
+                            <!-- Results Display -->
+                            <div id="results" class="mt-4" style="display: none;">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-3">
+                                            <i class="fas fa-chart-pie me-2"></i>
+                                            Analysis Results
+                                        </h5>
+                                        <div id="resultContent"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center mb-5">
+                <h2 class="display-5 fw-bold">Why Choose Our Detector?</h2>
+                <p class="lead">Advanced AI technology meets user-friendly design</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-brain fa-3x text-primary"></i>
+                    </div>
+                    <h4>AI-Powered Detection</h4>
+                    <p>Advanced machine learning algorithms analyze multiple features including text patterns, sentiment, and linguistic characteristics.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-gauge-high fa-3x text-success"></i>
+                    </div>
+                    <h4>High Accuracy</h4>
+                    <p>Our model achieves excellent performance with comprehensive feature engineering and robust training on diverse review data.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-bolt fa-3x text-warning"></i>
+                    </div>
+                    <h4>Real-time Analysis</h4>
+                    <p>Get instant results with our optimized prediction pipeline. Analyze single reviews or batch process multiple reviews.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Batch Upload Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-body p-4">
+                        <h3 class="card-title text-center mb-4">
+                            <i class="fas fa-file-upload text-primary me-2"></i>
+                            Batch Analysis
+                        </h3>
+                        <p class="text-center text-muted mb-4">
+                            Upload a CSV file with multiple reviews for bulk analysis
+                        </p>
+
+                        <form action="{{ url_for('batch_predict') }}" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="csvFile" class="form-label fw-semibold">
+                                    <i class="fas fa-file-csv me-1"></i>
+                                    Choose CSV File
+                                </label>
+                                <input type="file" class="form-control" id="csvFile" name="file" accept=".csv" required>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    CSV file should contain a column named 'review_text'
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                <i class="fas fa-upload me-2"></i>
+                                Upload and Analyze
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sample Reviews Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center mb-5">
+                <h2 class="display-6 fw-bold">Try These Sample Reviews</h2>
+                <p class="lead">Click on any sample to test our detector</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 sample-card border-danger" data-review="This product is amazing! Best purchase ever! Highly recommend! 5 stars!" data-type="fake">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-danger me-2">LIKELY FAKE</span>
+                            <small class="text-muted">Overly positive, generic</small>
+                        </div>
+                        <p class="card-text">"This product is amazing! Best purchase ever! Highly recommend! 5 stars!"</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 sample-card border-success" data-review="I've been using this for about 3 months and it works well for my needs. The build quality is decent for the price, though setup took longer than expected. Customer service was responsive when I had questions." data-type="real">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-success me-2">LIKELY AUTHENTIC</span>
+                            <small class="text-muted">Detailed, balanced</small>
+                        </div>
+                        <p class="card-text">"I've been using this for about 3 months and it works well for my needs. The build quality is decent for the price, though setup took longer than expected. Customer service was responsive when I had questions."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('reviewForm');
+    const reviewText = document.getElementById('reviewText');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const results = document.getElementById('results');
+    const resultContent = document.getElementById('resultContent');
+
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        analyzeReview();
+    });
+
+    // Handle sample review cards
+    document.querySelectorAll('.sample-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const review = this.getAttribute('data-review');
+            reviewText.value = review;
+            analyzeReview();
+        });
+    });
+
+    async function analyzeReview() {
+        const text = reviewText.value.trim();
+
+        if (!text) {
+            alert('Please enter a review to analyze');
+            return;
+        }
+
+        // Show loading state
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Analyzing...';
+        results.style.display = 'none';
+
+        try {
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ review_text: text })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayResults(data);
+            } else {
+                displayError(data.error);
+            }
+        } catch (error) {
+            displayError('Network error: ' + error.message);
+        } finally {
+            // Reset button
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerHTML = '<i class="fas fa-brain me-2"></i>Analyze Review';
+        }
+    }
+
+    function displayResults(data) {
+        const isFake = data.prediction === 'fake';
+        const confidence = isFake ? data.fake_confidence : data.real_confidence;
+
+        let resultHTML = `
+            <div class="text-center mb-3">
+                <div class="result-badge ${isFake ? 'bg-danger' : 'bg-success'} text-white p-3 rounded">
+                    <h4 class="mb-0">
+                        <i class="fas ${isFake ? 'fa-exclamation-triangle' : 'fa-check-circle'} me-2"></i>
+                        ${isFake ? 'LIKELY FAKE' : 'LIKELY AUTHENTIC'}
+                    </h4>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-6 text-center">
+                    <div class="confidence-score">
+                        <div class="display-6 fw-bold text-danger">${(data.fake_confidence * 100).toFixed(1)}%</div>
+                        <small class="text-muted">Fake Confidence</small>
+                    </div>
+                </div>
+                <div class="col-6 text-center">
+                    <div class="confidence-score">
+                        <div class="display-6 fw-bold text-success">${(data.real_confidence * 100).toFixed(1)}%</div>
+                        <small class="text-muted">Authentic Confidence</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress mb-3" style="height: 10px;">
+                <div class="progress-bar bg-danger" style="width: ${data.fake_confidence * 100}%"></div>
+                <div class="progress-bar bg-success" style="width: ${data.real_confidence * 100}%"></div>
+            </div>
+
+            <div class="mt-3">
+                <h6><i class="fas fa-chart-bar me-2"></i>Key Features:</h6>
+                <div class="row g-2 small">
+                    <div class="col-6">Length: ${data.features.length} chars</div>
+                    <div class="col-6">Words: ${data.features.word_count}</div>
+                    <div class="col-6">Sentiment: ${data.features.polarity.toFixed(2)}</div>
+                    <div class="col-6">Subjectivity: ${data.features.subjectivity.toFixed(2)}</div>
+                </div>
+            </div>
+        `;
+
+        resultContent.innerHTML = resultHTML;
+        results.style.display = 'block';
+        results.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function displayError(error) {
+        resultContent.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Error: ${error}
+            </div>
+        `;
+        results.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

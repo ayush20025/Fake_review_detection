@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}How It Works - Fake Review Detector{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold">How Our AI Detector Works</h1>
+                <p class="lead">Understanding the science behind fake review detection</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Steps -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="process-step text-center">
+                <div class="step-number">1</div>
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-4">
+                        <i class="fas fa-file-text fa-2x text-primary mb-3"></i>
+                        <h4>Text Processing</h4>
+                        <p>The review text is preprocessed and cleaned. We remove noise, normalize text, and extract meaningful features like word count, sentence structure, and punctuation patterns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="process-step text-center">
+                <div class="step-number">2</div>
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-4">
+                        <i class="fas fa-chart-line fa-2x text-success mb-3"></i>
+                        <h4>Feature Extraction</h4>
+                        <p>We analyze sentiment, linguistic patterns, text complexity, and behavioral indicators. TF-IDF vectorization captures important words and phrases that distinguish fake from real reviews.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="process-step text-center">
+                <div class="step-number">3</div>
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-4">
+                        <i class="fas fa-brain fa-2x text-info mb-3"></i>
+                        <h4>AI Classification</h4>
+                        <p>Our trained machine learning model processes all features to make a prediction. The model outputs probability scores indicating likelihood of the review being fake or authentic.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Features Section -->
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <div class="card border-0 shadow">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-search me-2"></i>
+                        What We Analyze
+                    </h2>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="feature-analysis">
+                                <h5><i class="fas fa-comments text-primary me-2"></i>Text Features</h5>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Review length and word count</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Average word length</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Sentence structure</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Punctuation patterns</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Capital letter usage</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="feature-analysis">
+                                <h5><i class="fas fa-heart text-danger me-2"></i>Sentiment Analysis</h5>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Emotional polarity (positive/negative)</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Subjectivity levels</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Extreme sentiment patterns</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Emotional authenticity</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Opinion consistency</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="feature-analysis">
+                                <h5><i class="fas fa-language text-warning me-2"></i>Linguistic Patterns</h5>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Word uniqueness ratio</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Repetitive phrases</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Generic expressions</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Vocabulary complexity</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Writing style consistency</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="feature-analysis">
+                                <h5><i class="fas fa-exclamation-triangle text-info me-2"></i>Suspicious Indicators</h5>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Excessive enthusiasm</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Overly generic content</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Lack of specific details</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Unnatural language patterns</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Template-like structure</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Information -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow bg-light">
+                <div class="card-body p-5">
+                    <h3 class="text-center mb-4">
+                        <i class="fas fa-cogs me-2"></i>
+                        Technical Details
+                    </h3>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h5>Machine Learning Model</h5>
+                            <p>We use ensemble methods including Random Forest, which combines multiple decision trees to make robust predictions. The model is trained on diverse review datasets.</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5>Feature Engineering</h5>
+                            <p>TF-IDF vectorization captures important words and phrases, while custom features analyze text structure, sentiment, and linguistic patterns specific to fake reviews.</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5>Training Process</h5>
+                            <p>The model is trained on labeled datasets containing both authentic and fake reviews, learning to distinguish patterns that separate genuine feedback from deceptive content.</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5>Continuous Learning</h5>
+                            <p>Our system is designed to adapt to new patterns in fake reviews, ensuring accuracy remains high as deceptive techniques evolve over time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.process-step {
+    position: relative;
+}
+
+.step-number {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    z-index: 10;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.feature-analysis ul li {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.feature-analysis ul li:last-child {
+    border-bottom: none;
+}
+</style>
+{% endblock %}

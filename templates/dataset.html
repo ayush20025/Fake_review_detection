@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Dataset - Fake Review Detector{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold">Dataset Information</h1>
+                <p class="lead">Learn about the data powering our fake review detection system</p>
+            </div>
+        </div>
+    </div>
+
+    {% if dataset_info %}
+    <!-- Dataset Statistics -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-4">
+                        <i class="fas fa-comments fa-3x text-primary mb-3"></i>
+                        <h2 class="display-6 fw-bold text-primary">{{ "{:,}".format(dataset_info.total_reviews) }}</h2>
+                        <p class="mb-0 fw-semibold">Total Reviews</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-4">
+                        <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                        <h2 class="display-6 fw-bold text-danger">{{ "{:,}".format(dataset_info.fake_reviews) }}</h2>
+                        <p class="mb-0 fw-semibold">Fake Reviews</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-4">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <h2 class="display-6 fw-bold text-success">{{ "{:,}".format(dataset_info.real_reviews) }}</h2>
+                        <p class="mb-0 fw-semibold">Authentic Reviews</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card text-center">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-4">
+                        <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                        <h2 class="display-6 fw-bold text-warning">{{ "{:.1f}".format(dataset_info.avg_rating) }}</h2>
+                        <p class="mb-0 fw-semibold">Average Rating</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dataset Composition -->
+    <div class="row mb-5">
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow">
+                <div class="card-body p-4">
+                    <h3 class="card-title">
+                        <i class="fas fa-chart-pie text-primary me-2"></i>
+                        Dataset Composition
+                    </h3>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>Fake Reviews</span>
+                            <span class="fw-bold">{{ "{:.1f}%".format((dataset_info.fake_reviews / dataset_info.total_reviews) * 100) }}</span>
+                        </div>
+                        <div class="progress mb-3" style="height: 10px;">
+                            <div class="progress-bar bg-danger" style="width: {{ (dataset_info.fake_reviews / dataset_info.total_reviews) * 100 }}%"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>Authentic Reviews</span>
+                            <span class="fw-bold">{{ "{:.1f}%".format((dataset_info.real_reviews / dataset_info.total_reviews) * 100) }}</span>
+                        </div>
+                        <div class="progress mb-3" style="height: 10px;">
+                            <div class="progress-bar bg-success" style="width: {{ (dataset_info.real_reviews / dataset_info.total_reviews) * 100 }}%"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>Verified Purchases</span>
+                            <span class="fw-bold">{{ "{:.1f}%".format(dataset_info.verified_purchase_ratio * 100) }}</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-info" style="width: {{ dataset_info.verified_purchase_ratio * 100 }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow">
+                <div class="card-body p-4">
+                    <h3 class="card-title">
+                        <i class="fas fa-database text-success me-2"></i>
+                        Data Sources
+                    </h3>
+                    <p>Our training dataset combines reviews from multiple sources to ensure robustness:</p>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item border-0 px-0">
+                            <i class="fas fa-shopping-cart text-warning me-2"></i>
+                            <strong>E-commerce Platforms:</strong> Product reviews from major online retailers
+                        </li>
+                        <li class="list-group-item border-0 px-0">
+                            <i class="fas fa-utensils text-info me-2"></i>
+                            <strong>Restaurant Reviews:</strong> Food service feedback and ratings
+                        </li>
+                        <li class="list-group-item border-0 px-0">
+                            <i class="fas fa-bed text-primary me-2"></i>
+                            <strong>Hotel Reviews:</strong> Hospitality and accommodation feedback
+                        </li>
+                        <li class="list-group-item border-0 px-0">
+                            <i class="fas fa-cogs text-secondary me-2"></i>
+                            <strong>Synthetic Data:</strong> Generated samples for balanced training
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Data Features -->
+    <div class="row mb-5">
+        <div class="col-lg-12">
+            <div class="card border-0 shadow">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-list-check me-2"></i>
+                        Key Data Features
+                    </h2>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-file-text text-primary me-2"></i>Text Features</h5>
+                            <ul class="feature-list">
+                                <li><strong>Review Text:</strong> The main content of each review</li>
+                                <li><strong>Text Length:</strong> Character and word counts</li>
+                                <li><strong>Sentence Structure:</strong> Grammar and punctuation patterns</li>
+                                <li><strong>Vocabulary Richness:</strong> Unique word ratios and complexity</li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-chart-line text-success me-2"></i>Rating Features</h5>
+                            <ul class="feature-list">
+                                <li><strong>Star Ratings:</strong> 1-5 star review ratings</li>
+                                <li><strong>Verified Purchase:</strong> Whether reviewer bought the product</li>
+                                <li><strong>Helpful Votes:</strong> Community feedback on review quality</li>
+                                <li><strong>Rating Distribution:</strong> Patterns in rating behavior</li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-heart text-danger me-2"></i>Sentiment Features</h5>
+                            <ul class="feature-list">
+                                <li><strong>Polarity Score:</strong> Positive or negative sentiment</li>
+                                <li><strong>Subjectivity:</strong> Opinion vs factual content ratio</li>
+                                <li><strong>Emotion Analysis:</strong> Detected emotional patterns</li>
+                                <li><strong>Sentiment Consistency:</strong> Rating-sentiment alignment</li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-user-check text-info me-2"></i>Behavioral Features</h5>
+                            <ul class="feature-list">
+                                <li><strong>Review Patterns:</strong> Timing and frequency analysis</li>
+                                <li><strong>Language Style:</strong> Writing patterns and consistency</li>
+                                <li><strong>Content Authenticity:</strong> Genuine experience indicators</li>
+                                <li><strong>Spam Indicators:</strong> Common fake review patterns</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Quality -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow bg-light">
+                <div class="card-body p-5 text-center">
+                    <h3 class="mb-3">
+                        <i class="fas fa-shield-check text-success me-2"></i>
+                        Data Quality Assurance
+                    </h3>
+                    <p class="lead mb-4">
+                        Our dataset undergoes rigorous quality control to ensure reliable model training and accurate predictions.
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="quality-feature">
+                                <i class="fas fa-broom fa-2x text-primary mb-2"></i>
+                                <h6>Data Cleaning</h6>
+                                <p class="small">Noise removal and standardization</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="quality-feature">
+                                <i class="fas fa-balance-scale fa-2x text-success mb-2"></i>
+                                <h6>Balanced Sampling</h6>
+                                <p class="small">Equal representation of fake and real reviews</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="quality-feature">
+                                <i class="fas fa-check-double fa-2x text-info mb-2"></i>
+                                <h6>Validation</h6>
+                                <p class="small">Multiple verification steps and expert review</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.feature-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.feature-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.feature-list li:last-child {
+    border-bottom: none;
+}
+
+.quality-feature {
+    padding: 1rem;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}

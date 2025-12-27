@@ -1,61 +1,132 @@
-# Fake_review_detection
-ake reviews create unfair competition, manipulate product ratings, and negatively impact both consumers and businesses. Manually verifying large volumes of reviews is impractical, which makes automated solutions essential.  This project was developed to:  Improve trust in online review systems .
+# Fake Review Detection System
 
-📌 Overview
+A comprehensive web application for detecting fake product reviews using advanced machine learning techniques.
 
-Online reviews significantly influence consumer decisions, but fake and spam reviews reduce trust and fairness.
-This project implements a Machine Learning–based Fake Review Detection System that classifies textual reviews as REAL or FAKE using Natural Language Processing (NLP) techniques.
+## Features
 
-The system supports both single review prediction and batch review analysis using CSV files through a simple web interface.
+- **AI-Powered Detection**: Uses Random Forest classifier with TF-IDF vectorization and custom features
+- **Real-time Analysis**: Instant prediction of review authenticity
+- **Batch Processing**: Upload CSV files for bulk analysis
+- **Interactive UI**: Modern, responsive web interface
+- **Detailed Analytics**: Confidence scores and feature analysis
+- **Multiple Pages**: Home, About, How It Works, Dataset information
 
-🎯 Objectives
+## Technology Stack
 
-Detect fake or misleading reviews automatically
+- **Backend**: Flask (Python)
+- **Machine Learning**: scikit-learn, pandas, numpy
+- **NLP**: TextBlob, NLTK
+- **Frontend**: Bootstrap 5, HTML5, CSS3, JavaScript
+- **Deployment**: Gunicorn ready
 
-Apply NLP techniques to preprocess textual data
+## Installation
 
-Train and evaluate multiple supervised ML models
+1. Clone or extract the project:
+   ```bash
+   cd fake_review_detector
+   ```
 
-Build an end-to-end ML pipeline with a web interface
+2. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-🧠 Approach
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Collect and preprocess review text
+4. Download NLTK data:
+   ```python
+   import nltk
+   nltk.download('punkt')
+   nltk.download('stopwords')
+   nltk.download('vader_lexicon')
+   ```
 
-Clean text using NLP techniques (tokenization, stopword removal, lemmatization)
+## Usage
 
-Convert text into numerical features using TF-IDF
+1. **Development Mode**:
+   ```bash
+   python app.py
+   ```
+   Access the application at `http://localhost:5000`
 
-Train and evaluate multiple ML models
+2. **Production Mode**:
+   ```bash
+   gunicorn app:app
+   ```
 
-Select the best-performing model
+## Project Structure
 
-Deploy the model using a Flask-based web application
+```
+fake_review_detector/
+├── app.py                 # Main Flask application
+├── requirements.txt       # Python dependencies
+├── models/               # ML models and data
+│   ├── best_model.pkl    # Trained classifier
+│   ├── tfidf_vectorizer.pkl
+│   ├── feature_scaler.pkl
+│   └── *.csv             # Dataset files
+├── templates/            # HTML templates
+│   ├── base.html
+│   ├── index.html
+│   ├── about.html
+│   ├── how_it_works.html
+│   ├── dataset.html
+│   └── batch_results.html
+├── static/               # Static assets
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── main.js
+│   └── images/
+└── utils/                # Utility functions
+```
 
-✨ Features
+## Features Analyzed
 
-Classifies reviews as REAL or FAKE
+### Text Features
+- Review length and word count
+- Average word length
+- Sentence structure
+- Punctuation patterns
+- Capital letter usage
 
-NLP preprocessing pipeline
+### Sentiment Analysis
+- Emotional polarity (positive/negative)
+- Subjectivity levels
+- Sentiment consistency
 
-Feature extraction using TF-IDF and sentiment analysis
+### Behavioral Indicators
+- Word uniqueness ratio
+- Repetitive phrases
+- Generic expressions
+- Spam indicators
 
-Model comparison and evaluation
+## API Endpoints
 
-Web-based interface using Flask
+- `GET /` - Main page
+- `GET /about` - About page
+- `GET /how_it_works` - How it works page
+- `GET /dataset` - Dataset information
+- `POST /predict` - Single review prediction
+- `POST /batch_predict` - Batch file upload
+- `GET /api/stats` - System statistics
 
-CSV batch processing support
+## Model Performance
 
-🛠️ Tech Stack
+The system uses a Random Forest classifier trained on a balanced dataset of fake and authentic reviews, achieving high accuracy in distinguishing between genuine and deceptive content.
 
-Programming Language: Python
+## Contributing
 
-Machine Learning: Scikit-learn
+This is a final year academic project showcasing machine learning applications in natural language processing and web development.
 
-Natural Language Processing: NLTK, TextBlob
+## License
 
-Web Framework: Flask
+This project is for educational purposes as part of a final year project.
 
-Data Handling: Pandas, NumPy
+## Contact
 
-Frontend: HTML, CSS, Bootstrap
+For questions or suggestions regarding this project, please refer to the About page in the application.

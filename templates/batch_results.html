@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Batch Analysis Results - Fake Review Detector{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-6 fw-bold">
+                    <i class="fas fa-chart-bar text-primary me-2"></i>
+                    Batch Analysis Results
+                </h1>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if results %}
+    <!-- Summary Statistics -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow">
+                <div class="card-body">
+                    <i class="fas fa-list fa-2x text-primary mb-3"></i>
+                    <h3 class="fw-bold">{{ results|length }}</h3>
+                    <p class="mb-0">Total Reviews</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow">
+                <div class="card-body">
+                    <i class="fas fa-exclamation-triangle fa-2x text-danger mb-3"></i>
+                    <h3 class="fw-bold text-danger">{{ results|selectattr("prediction", "equalto", "fake")|list|length }}</h3>
+                    <p class="mb-0">Likely Fake</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow">
+                <div class="card-body">
+                    <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+                    <h3 class="fw-bold text-success">{{ results|selectattr("prediction", "equalto", "real")|list|length }}</h3>
+                    <p class="mb-0">Likely Authentic</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow">
+                <div class="card-body">
+                    <i class="fas fa-percentage fa-2x text-info mb-3"></i>
+                    <h3 class="fw-bold text-info">{{ "%.1f"|format((results|selectattr("prediction", "equalto", "fake")|list|length / results|length) * 100) }}%</h3>
+                    <p class="mb-0">Fake Rate</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-table me-2"></i>
+                        Detailed Results
+                    </h4>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="50%">Review Text</th>
+                                    <th width="15%" class="text-center">Prediction</th>
+                                    <th width="15%" class="text-center">Fake Confidence</th>
+                                    <th width="15%" class="text-center">Real Confidence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in results %}
+                                <tr>
+                                    <td class="text-muted fw-semibold">{{ loop.index }}</td>
+                                    <td>
+                                        <div class="review-text">
+                                            {{ result.review_text[:200] }}{% if result.review_text|length > 200 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if result.prediction == 'fake' %}
+                                            <span class="badge bg-danger fs-6">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                                FAKE
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-success fs-6">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                AUTHENTIC
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="confidence-score">
+                                            <div class="fw-bold text-danger">{{ "%.1f"|format(result.fake_confidence * 100) }}%</div>
+                                            <div class="progress mt-1" style="height: 4px;">
+                                                <div class="progress-bar bg-danger" style="width: {{ result.fake_confidence * 100 }}%"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="confidence-score">
+                                            <div class="fw-bold text-success">{{ "%.1f"|format(result.real_confidence * 100) }}%</div>
+                                            <div class="progress mt-1" style="height: 4px;">
+                                                <div class="progress-bar bg-success" style="width: {{ result.real_confidence * 100 }}%"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Options -->
+    <div class="row mt-4">
+        <div class="col-lg-12 text-center">
+            <button class="btn btn-outline-primary me-2" onclick="exportToCSV()">
+                <i class="fas fa-download me-2"></i>
+                Export to CSV
+            </button>
+            <button class="btn btn-outline-success" onclick="window.print()">
+                <i class="fas fa-print me-2"></i>
+                Print Results
+            </button>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- No Results -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+            <div class="card border-0 shadow">
+                <div class="card-body p-5">
+                    <i class="fas fa-inbox fa-4x text-muted mb-4"></i>
+                    <h3>No Results Available</h3>
+                    <p class="text-muted mb-4">
+                        No analysis results to display. Please upload a valid CSV file with review data.
+                    </p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% if results %}
+<script>
+function exportToCSV() {
+    const results = {{ results | tojson }};
+
+    // Create CSV content
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Index,Review Text,Prediction,Fake Confidence,Real Confidence\n";
+
+    results.forEach((result, index) => {
+        const row = [
+            index + 1,
+            '"' + result.review_text.replace(/"/g, '""') + '"',
+            result.prediction,
+            (result.fake_confidence * 100).toFixed(1) + '%',
+            (result.real_confidence * 100).toFixed(1) + '%'
+        ].join(",");
+        csvContent += row + "\n";
+    });
+
+    // Create download link
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "fake_review_analysis_results.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
+{% endif %}
+
+<style>
+.review-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.confidence-score {
+    min-width: 80px;
+}
+
+@media print {
+    .btn, .card-header {
+        display: none !important;
+    }
+}
+</style>
+{% endblock %}
